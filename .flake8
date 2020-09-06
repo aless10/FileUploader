@@ -6,6 +6,7 @@ exclude =
     */migrations/*,
     tests_*.py,
     *_tests.py,
+    manage.py,
     tests.py,
     build,
     dist
