@@ -1,4 +1,7 @@
 # FileUploader
+![Run application tests](https://github.com/aless10/FileUploader/workflows/Run%20application%20tests/badge.svg)
+
+
 A basic file uploader application
 
 ## TOC
