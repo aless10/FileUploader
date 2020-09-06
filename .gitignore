@@ -132,4 +132,4 @@ dmypy.json
 .idea
 .DS_Store
 
-static/media/
+file_uploader/static/media/
