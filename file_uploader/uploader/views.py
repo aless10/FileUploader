@@ -1,6 +1,7 @@
-from django.http import HttpResponseRedirect
+from django.http import HttpResponseRedirect, Http404
 from django.shortcuts import render
 from django.views.generic import FormView, TemplateView, ListView
+from django.contrib import messages
 
 from .forms import FileUploadForm
 from .models import Link, File
@@ -20,7 +21,10 @@ class UploadFileList(ListView):
         # if expiry date is set => return expired link and redirect to homepage
         link = str(kwargs.get("link"))
         files = self.get_files_by_reference(link=link)
-        return render(request, self.template_name, {'files': files})
+        if files:
+            return render(request, self.template_name, {'files': files})
+        else:
+            raise Http404(f"No data is found with link {link}")
 
 
 class ThanksView(TemplateView):
@@ -49,12 +53,12 @@ class UploadView(FormView):
                     link=link
                 )
                 file_obj.save()
-            return HttpResponseRedirect(self.success_url,
-                                        {
+
+            messages.add_message(request, messages.SUCCESS, {
                                             "link": link.slug,
                                             "password": link.password,
                                             "expiry_date": link.expiry_date
-                                        }
-                                        )
+                                        })
+            return HttpResponseRedirect(self.success_url)
         else:
             return render(request, self.template_name, {'form': form})

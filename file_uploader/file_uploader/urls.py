@@ -15,11 +15,13 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path, include
+from django.views.generic import TemplateView
 from health_app import urls as health_urls
 from uploader import urls as uploader_urls
 
 urlpatterns = [
     path('admin/', admin.site.urls),
+    path(r'', TemplateView.as_view(template_name="home.html")),
     path(r'upload/', include(uploader_urls)),
     path(r'health/', include(health_urls)),
 ]

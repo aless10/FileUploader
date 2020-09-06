@@ -9,7 +9,7 @@ urlpatterns = [
         name='upload-view'
     ),
     path(
-        'thanks',
+        r'thanks',
         ThanksView.as_view(),
         name='thanks-view'
     ),
