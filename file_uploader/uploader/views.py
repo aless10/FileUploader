@@ -1,30 +1,59 @@
-from django.http import HttpResponseRedirect, Http404
-from django.shortcuts import render
+from datetime import datetime
+
+from django.http import HttpResponseRedirect, Http404, HttpResponseForbidden
+from django.shortcuts import render, get_list_or_404
 from django.views.generic import FormView, TemplateView, ListView
 from django.contrib import messages
 
-from .forms import FileUploadForm
+from .forms import FileUploadForm, UnlockForm
 from .models import Link, File
 
 
 class UploadFileList(ListView):
     model = File
     template_name = "file_list.html"
+    form_class = UnlockForm
 
     def get_files_by_reference(self, link):
-        return self.model.\
+        return self.model. \
             objects.filter(link__slug=link)  # pylint:disable=E1101
 
+    def return_file_list(self, request, link_obj):
+        files = get_list_or_404(self.model, link=link_obj)
+        return render(request, self.template_name, {'files': files})
+
     def get(self, request, *args, **kwargs):
-        # if password is set => show modal whit password
-        # and then redirect to this list
-        # if expiry date is set => return expired link and redirect to homepage
         link = str(kwargs.get("link"))
-        files = self.get_files_by_reference(link=link)
-        if files:
-            return render(request, self.template_name, {'files': files})
+        link_obj = Link.objects.get(slug=link)  # pylint:disable=E1101
+        if request.GET.get("password") is None:
+            expiry_date = link_obj.expiry_date
+            if link_obj is None:
+                raise Http404(
+                    f"The link {link} that you provided does not exists"
+                )
+            elif link_obj.password is not None:
+                form = self.form_class()
+                return render(
+                    request,
+                    self.template_name,
+                    {'password': True, "form": form}
+                )
+            elif expiry_date is not None and expiry_date > datetime.now():
+                messages.add_message(request, messages.WARNING, {
+                    "link": link_obj.slug,
+                    "expiry_date": expiry_date
+                })
+                return HttpResponseRedirect("/")
+            else:
+                return self.return_file_list(request, link_obj)
         else:
-            raise Http404(f"No data is found with link {link}")
+            password = request.GET.get("password")
+            if password != link_obj.password:
+                return HttpResponseForbidden(
+                    f"Invalid password for link {link}"
+                )
+            else:
+                return self.return_file_list(request, link_obj)
 
 
 class ThanksView(TemplateView):
@@ -55,10 +84,10 @@ class UploadView(FormView):
                 file_obj.save()
 
             messages.add_message(request, messages.SUCCESS, {
-                                            "link": link.slug,
-                                            "password": link.password,
-                                            "expiry_date": link.expiry_date
-                                        })
+                "link": link.slug,
+                "password": link.password,
+                "expiry_date": link.expiry_date
+            })
             return HttpResponseRedirect(self.success_url)
         else:
             return render(request, self.template_name, {'form': form})
