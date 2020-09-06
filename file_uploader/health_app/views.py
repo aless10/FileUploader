@@ -1,4 +1,4 @@
-from django.http import HttpResponse
+from django.http import JsonResponse
 from django.views import View
 from django.contrib.auth.models import User
 import datetime
@@ -10,7 +10,7 @@ def request_time():
 
 class HealthView(View):
     def get(self, request):
-        return HttpResponse({"status": "ok", "date": request_time()})
+        return JsonResponse({"status": "ok", "date": request_time()})
 
 
 class DatabaseHealthView(View):
@@ -18,12 +18,12 @@ class DatabaseHealthView(View):
         date = request_time()
         try:
             User.objects.all()
-            return HttpResponse({
+            return JsonResponse({
                 "status": "database is running",
                 "date": date
             })
         except Exception:
-            return HttpResponse({
+            return JsonResponse({
                 "status": "database is not running",
                 "date": date
             })
