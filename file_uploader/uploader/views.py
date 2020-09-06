@@ -1,5 +1,3 @@
-from datetime import datetime
-
 from django.http import HttpResponseRedirect, Http404, HttpResponseForbidden
 from django.shortcuts import render, get_list_or_404
 from django.views.generic import FormView, TemplateView, ListView
@@ -7,6 +5,7 @@ from django.contrib import messages
 
 from .forms import FileUploadForm, UnlockForm
 from .models import Link, File
+from .utils import is_the_past
 
 
 class UploadFileList(ListView):
@@ -38,7 +37,7 @@ class UploadFileList(ListView):
                     self.template_name,
                     {'password': True, "form": form}
                 )
-            elif expiry_date is not None and expiry_date > datetime.now():
+            elif expiry_date is not None and is_the_past(expiry_date):
                 messages.add_message(request, messages.WARNING, {
                     "link": link_obj.slug,
                     "expiry_date": expiry_date
