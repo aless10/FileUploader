@@ -27,8 +27,8 @@ This should start the containers with the settings found in the ``.env`` file.
 You can find a sample in the repo.
 In the ``local`` folder there are some script to run:
     
-    ```./local/runtests.sh``` to run the tests
-    ```./local/import_data.sh``` to import the data and populate the database
+    ./local/runtests_local.sh to run the tests as localhost
+    ./local/runtests_remote.sh to run the tests in docker containers
 
 ## Install git client Hooks
 
