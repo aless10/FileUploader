@@ -11,20 +11,20 @@ A basic file uploader application
 
 ## Version
 
-0.2.1
+0.3.0.dev
 
-## How to run
+## How to run it
 
 The application runs inside a docker container. The django application is served via gunicorn with a nginx server in front of it.
 The database is a Postgresql that also lives inside another container.
 
-After cloning the repo, you can run in the terminal:
+After cloning the repo, you should create a file ``.env`` with the environment variables that you want to use. You can find and example [here]([.env.sample))
+Then you can run in the terminal:
     
     ./local/build.sh (it builds the app container)
     ./local/start.sh (it runs the docker-compose command)
 
 This should start the containers with the settings found in the ``.env`` file.
-You can find a sample in the repo.
 In the ``local`` folder there are some script to run:
     
     ./local/runtests_local.sh to run the tests as localhost

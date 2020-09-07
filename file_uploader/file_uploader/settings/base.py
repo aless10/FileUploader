@@ -119,3 +119,4 @@ FILE_UPLOAD_HANDLERS = ["django.core.files.uploadhandler.MemoryFileUploadHandler
 
 
 MEDIA_ROOT = os.path.join(BASE_DIR, "..", STATIC_URL[1:], "media")
+MEDIA_URL = '/media/'
