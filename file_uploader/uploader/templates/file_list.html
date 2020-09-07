@@ -24,7 +24,7 @@
     {% for file in files %}
 
     <li class="collection-item">
-        <div>{{ file.filename }}<a href="{% static 'media/' %}{{ file.filename }}" download class="secondary-content"><i
+        <div>{{ file.filename }}<a href="{% static 'media/' %}{{ file.file.name }}" download class="secondary-content"><i
                 class="material-icons">cloud_download</i></a></div>
     </li>
     {% endfor %}
