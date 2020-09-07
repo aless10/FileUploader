@@ -11,7 +11,7 @@ A basic file uploader application
 
 ## Version
 
-0.3.0.dev
+0.3.0
 
 ## How to run it
 
