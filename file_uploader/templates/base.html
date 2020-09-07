@@ -3,14 +3,38 @@
 <head>
     <meta charset="UTF-8">
     <title>FileUploader</title>
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css">
+    {% block extra_css %}
+    {# Override this in templates to add extra css #}
+    {% endblock %}
 </head>
+
+
 <body>
 
-Hello!
+<nav>
+    <div class="nav-wrapper">
+        <a href="/" class="brand-logo center">FileUpload</a>
+        <ul id="nav-mobile" class="left hide-on-med-and-down">
+            <li><a href="/upload">Upload</a></li>
+        </ul>
+    </div>
+</nav>
 
-{% block content %}
+<div class="container">
+    {% block content %}
 
+    {% endblock %}
+</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
+
+{% block extra_js %}
+{# Override this in templates to add extra javascript #}
 {% endblock %}
 
+
 </body>
+
 </html>

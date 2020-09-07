@@ -1,5 +1,30 @@
+{% extends "base.html" %}
+
+{% load static %}
+
+
+{% block content %}
 {% if messages %}
-    {% for message in messages %}
-        <h2>{{ message }}</h2>
-    {% endfor %}
+    <h3>Thanks for uploading your files.</h3>
+    <h4>Here is the link that you can share with your friends</h4>
+
+    <div class="row">
+        <input id="foo" value="{{ request.scheme }}://{{ request.get_host }}/upload/list/{{ data.link }}">
+         <!-- Trigger -->
+        <button class="btn" data-clipboard-target="#foo">
+            <img src="{% static 'images/clippy.svg' %}" alt="Copy to clipboard">
+        </button>
+    </div>
+
+{% else %}
+    <p>No need to thank you.</p>
 {% endif %}
+
+<a href="/upload" class="waves-effect waves-light btn"><i class="material-icons left">cloud_upload</i>Upload more</a>
+
+{% endblock %}
+
+
+{% block extra_js %}
+<script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.6/clipboard.min.js"></script>
+{% endblock %}

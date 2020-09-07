@@ -1,3 +1,4 @@
+from django.contrib.messages import get_messages
 from django.http import HttpResponseRedirect, Http404, HttpResponseForbidden
 from django.shortcuts import render, get_list_or_404
 from django.views.generic import FormView, TemplateView, ListView
@@ -19,7 +20,11 @@ class UploadFileList(ListView):
 
     def return_file_list(self, request, link_obj):
         files = get_list_or_404(self.model, link=link_obj)
-        return render(request, self.template_name, {'files': files})
+        return render(
+            request,
+            self.template_name,
+            {'files': files, 'link': str(link_obj.slug)}
+        )
 
     def get(self, request, *args, **kwargs):
         link = str(kwargs.get("link"))
@@ -58,6 +63,13 @@ class UploadFileList(ListView):
 class ThanksView(TemplateView):
     template_name = "thanks.html"
 
+    def get(self, request, *args, **kwargs):
+        storage = get_messages(request)
+        data = {}
+        for message in storage:
+            data.update({"link": message.message})
+        return render(request, self.template_name, {"data": data})
+
 
 class UploadView(FormView):
     template_name = 'upload.html'
@@ -82,11 +94,7 @@ class UploadView(FormView):
                 )
                 file_obj.save()
 
-            messages.add_message(request, messages.SUCCESS, {
-                "link": link.slug,
-                "password": link.password,
-                "expiry_date": link.expiry_date
-            })
+            messages.add_message(request, messages.SUCCESS, str(link.slug))
             return HttpResponseRedirect(self.success_url)
         else:
             return render(request, self.template_name, {'form': form})

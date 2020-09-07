@@ -1,12 +1,26 @@
-{% if password %}
-    <p>insert password</p>
-    <form method="get">
-        {{ form.as_p }}
-    <input type="submit" value="Check">
-</form>
-{% endif %}
+{% extends "base.html" %}
+{% load static %}
 
 
-{{ files }}
+{% block content %}
+    {% if password %}
+        <p>insert password</p>
+        <form method="get">
+            {{ form.as_p }}
+        <input type="submit" value="Check">
+    </form>
+    {% endif %}
 
-{{ MEDIA_URL }}
+    <h4>File list</h4>
+
+    <ul class="collection with-header">
+        <li class="collection-header"><h5>{{ link }}</h5></li>
+        {% for file in files %}
+
+        <li class="collection-item">
+            <div>{{ file.filename }}<a href="{% static 'media/' %}{{ file.filename }}" download class="secondary-content"><i class="material-icons">cloud_download</i></a></div>
+        </li>
+        {% endfor %}
+    </ul>
+
+{% endblock %}
