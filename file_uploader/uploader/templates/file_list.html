@@ -3,24 +3,33 @@
 
 
 {% block content %}
-    {% if password %}
-        <p>insert password</p>
-        <form method="get">
-            {{ form.as_p }}
-        <input type="submit" value="Check">
-    </form>
-    {% endif %}
+{% if password %}
+<h5>These resources are password protected</h5>
+<form method="get">
+    <div class="row">
+        <div class="input-field col s12">
+            <input id="password" type="password" name="password" class="validate">
+            <label for="password">Password</label>
+        </div>
+    </div>
+    <input type="submit" value="Check">
+</form>
 
-    <h4>File list</h4>
+{% else %}
 
-    <ul class="collection with-header">
-        <li class="collection-header"><h5>{{ link }}</h5></li>
-        {% for file in files %}
+<h4>File list</h4>
 
-        <li class="collection-item">
-            <div>{{ file.filename }}<a href="{% static 'media/' %}{{ file.filename }}" download class="secondary-content"><i class="material-icons">cloud_download</i></a></div>
-        </li>
-        {% endfor %}
-    </ul>
+<ul class="collection with-header">
+    <li class="collection-header"><h5>{{ link }}</h5></li>
+    {% for file in files %}
+
+    <li class="collection-item">
+        <div>{{ file.filename }}<a href="{% static 'media/' %}{{ file.file.name }}" download class="secondary-content"><i
+                class="material-icons">cloud_download</i></a></div>
+    </li>
+    {% endfor %}
+</ul>
+
+{% endif %}
 
 {% endblock %}
